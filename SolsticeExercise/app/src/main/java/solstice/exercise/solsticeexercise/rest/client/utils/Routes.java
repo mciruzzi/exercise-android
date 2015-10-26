@@ -1,4 +1,4 @@
-package solstice.exercise.solsticeexercise.adapters;
+package solstice.exercise.solsticeexercise.rest.client.utils;
 
 /**
  * Created by mciruzzi on 24/11/14.

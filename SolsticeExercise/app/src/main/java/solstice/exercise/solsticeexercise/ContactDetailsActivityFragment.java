@@ -1,8 +1,10 @@
 package solstice.exercise.solsticeexercise;
 
+import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,25 +15,21 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
-import solstice.exercise.solsticeexercise.adapters.Routes;
 import solstice.exercise.solsticeexercise.model.Contact;
 import solstice.exercise.solsticeexercise.model.ContactDetails;
+import solstice.exercise.solsticeexercise.rest.client.utils.CachedImageLoader;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -109,6 +107,7 @@ public class ContactDetailsActivityFragment extends Fragment {
         TextView birthday = (TextView) view.findViewById(R.id.contactBirthday);
         TextView email = (TextView) view.findViewById(R.id.contactEmail);
         ImageView favorite = (ImageView) view.findViewById(R.id.contactFavorite);
+        ImageView largeImage = (ImageView) view.findViewById(R.id.contactImage);
 
         name.setText(contact.getName());
         company.setText(contact.getCompany());
@@ -128,6 +127,15 @@ public class ContactDetailsActivityFragment extends Fragment {
         else
             favorite.setVisibility(View.INVISIBLE);
 
+        loadImage(largeImage);
+    }
+
+    private void loadImage(ImageView imageView) {
+        String imageURL = contact.getDetails() != null ? contact.getDetails().getLargeImageURL() : contact.getSmallImageURL();
+        CachedImageLoader cachedImageLoader = new CachedImageLoader(requestQueue);
+
+        cachedImageLoader.get(imageURL, ImageLoader.getImageListener(imageView,
+                R.mipmap.default_profile, R.mipmap.default_profile));
 
     }
 

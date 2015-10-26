@@ -31,6 +31,8 @@ import solstice.exercise.solsticeexercise.ContactsActivity;
 import solstice.exercise.solsticeexercise.ILoadable;
 import solstice.exercise.solsticeexercise.R;
 import solstice.exercise.solsticeexercise.model.Contact;
+import solstice.exercise.solsticeexercise.rest.client.utils.CachedImageLoader;
+import solstice.exercise.solsticeexercise.rest.client.utils.Routes;
 
 public class ContactsAdapter extends ArrayAdapter {
 
@@ -73,22 +75,7 @@ public class ContactsAdapter extends ArrayAdapter {
 
         requestQueue.add(jsArrayRequest);
 
-        imageLoader = new ImageLoader(requestQueue,
-                new ImageLoader.ImageCache() {
-                    private final LruCache<String, Bitmap>
-                            cache = new LruCache<String, Bitmap>(20);
-
-                    @Override
-                    public Bitmap getBitmap(String url) {
-                        return cache.get(url);
-                    }
-
-                    @Override
-                    public void putBitmap(String url, Bitmap bitmap) {
-                        cache.put(url, bitmap);
-                    }
-                });
-
+        imageLoader = new CachedImageLoader( requestQueue);
     }
 
     @Override
