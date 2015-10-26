@@ -1,9 +1,11 @@
 package solstice.exercise.solsticeexercise.model;
 
+import java.io.Serializable;
+
 /**
  * Created by romac-ubuntu on 25/10/15.
  */
-public class Phone {
+public class Phone implements Serializable{
     private String work;
     private String home;
     private String mobile;

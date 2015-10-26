@@ -1,6 +1,8 @@
 package solstice.exercise.solsticeexercise.model;
 
-public class Contact {
+import java.io.Serializable;
+
+public class Contact implements Serializable {
     private String name;
     private String employeeId;
     private String company;

@@ -111,22 +111,24 @@ public class ContactsAdapter extends ArrayAdapter {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        // Not using ViewHolder Pattern
+        // Not using ViewHolder Pattern since there's bug setting images view to previous requested image download
         View row = null;
-        if (convertView == null) {
+        //if (convertView == null) {
             row = layoutInflater.inflate(R.layout.contact_in_list, parent, false);
-        } else {
-            row = convertView;
-        }
+        //} else {
+        //    row = convertView;
+        //}
 
         final Contact contact = (Contact) this.getItem(position);
 
         final ImageView image = (ImageView) row.findViewById(R.id.contactImage);
         final TextView name = (TextView) row.findViewById(R.id.contactName);
         final TextView phone = (TextView) row.findViewById(R.id.contactPhone);
+        image.setTag(position);
 
         name.setText(contact.getName());
         phone.setText(contact.getPhone().getHome());
+        image.setImageResource(R.mipmap.default_profile);
 
 
         imageLoader.get(contact.getSmallImageURL(), ImageLoader.getImageListener(image,
