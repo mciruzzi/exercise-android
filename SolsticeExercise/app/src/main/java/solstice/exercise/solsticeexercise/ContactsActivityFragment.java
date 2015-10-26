@@ -15,9 +15,16 @@ import solstice.exercise.solsticeexercise.model.Contact;
 public class ContactsActivityFragment extends Fragment {
 
     ListView contactsListView;
+    private ContactsAdapter contactsAdapter;
 
 
     public ContactsActivityFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        contactsAdapter = new ContactsAdapter((ContactsActivity) this.getActivity());
     }
 
     @Override
@@ -29,9 +36,7 @@ public class ContactsActivityFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         this.contactsListView = (ListView) view.findViewById(R.id.contactsListView);
-        final ContactsAdapter contactsAdapter = new ContactsAdapter((ContactsActivity) this.getActivity());
         this.contactsListView.setAdapter(contactsAdapter);
 
         this.contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
