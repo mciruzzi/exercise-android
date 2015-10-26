@@ -111,7 +111,7 @@ public class ContactsAdapter extends ArrayAdapter {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        // Not using ViewHolder Pattern since there's bug setting images view to previous requested image download
+        // TODO Not using ViewHolder Pattern since there's bug setting images view to previous requested image download
         View row = null;
         //if (convertView == null) {
             row = layoutInflater.inflate(R.layout.contact_in_list, parent, false);

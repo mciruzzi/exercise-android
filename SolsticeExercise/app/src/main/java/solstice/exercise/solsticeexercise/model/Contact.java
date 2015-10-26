@@ -10,6 +10,7 @@ public class Contact implements Serializable {
     private Long birthdate;
     private Phone phone;
     private String detailsURL;
+    private ContactDetails details;
 
     public String getName() {
         return name;
@@ -65,5 +66,13 @@ public class Contact implements Serializable {
 
     public void setDetailsURL(String detailsURL) {
         this.detailsURL = detailsURL;
+    }
+
+    public ContactDetails getDetails() {
+        return details;
+    }
+
+    public void setDetails(ContactDetails details) {
+        this.details = details;
     }
 }

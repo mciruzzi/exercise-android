@@ -33,4 +33,16 @@ public class Phone implements Serializable{
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        if ( work != null && !work.isEmpty() ) builder.append( work + " \t" + "WORK" + '\n' );
+        if ( home != null && !home.isEmpty() ) builder.append( home + " \t" + "HOME" + '\n');
+        if ( mobile != null && !mobile.isEmpty() ) builder.append( mobile+ " \t" + "MOBILE" +  '\n' );
+        // TODO GET LOCALIZED RESOURCES FOR WORK,HOME,MOBILE Strings
+
+        return builder.toString();
+
+    }
 }
