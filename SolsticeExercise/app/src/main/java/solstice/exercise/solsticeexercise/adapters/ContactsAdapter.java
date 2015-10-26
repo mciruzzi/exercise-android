@@ -67,9 +67,7 @@ public class ContactsAdapter extends ArrayAdapter {
         };
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest(
-                Request.Method.GET,
                 Routes.BASE_URL + "external/contacts.json",
-                null,
                 listener,
                 errorListener );
 
