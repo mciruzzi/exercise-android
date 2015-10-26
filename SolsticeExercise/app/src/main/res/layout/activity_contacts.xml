@@ -1,5 +1,37 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
-    android:name="solstice.exercise.solsticeexercise.ContactsActivityFragment"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:layout="@layout/fragment_contacts" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:id="@+id/login_progess_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/login_status_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/getting_contacts"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal" />
+
+    <fragment
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
+        android:name="solstice.exercise.solsticeexercise.ContactsActivityFragment"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        tools:layout="@layout/fragment_contacts" />
+
+
+
+
+
+</LinearLayout>
+
+

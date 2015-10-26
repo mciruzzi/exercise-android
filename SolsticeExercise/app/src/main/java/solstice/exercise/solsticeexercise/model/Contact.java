@@ -5,16 +5,15 @@ import java.util.Date;
 /**
  * Created by romac-ubuntu on 25/10/15.
  */
-public class Contact {
 
+public class Contact {
     private String name;
     private String employeeId;
     private String company;
     private String smallImageURL;
-    private Date birthdate;
-    private String workPhone;
-    private String homePhone;
-    private String mobilePhone;
+    private Long birthdate;
+    private Phone phone;
+
 
     private String detailsURL;
 
@@ -50,36 +49,20 @@ public class Contact {
         this.smallImageURL = smallImageURL;
     }
 
-    public Date getBirthdate() {
+    public Long getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(Long birthdate) {
         this.birthdate = birthdate;
     }
 
-    public String getWorkPhone() {
-        return workPhone;
+    public Phone getPhone() {
+        return phone;
     }
 
-    public void setWorkPhone(String workPhone) {
-        this.workPhone = workPhone;
-    }
-
-    public String getHomePhone() {
-        return homePhone;
-    }
-
-    public void setHomePhone(String homePhone) {
-        this.homePhone = homePhone;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
+    public void setPhone(Phone phone) {
+        this.phone = phone;
     }
 
     public String getDetailsURL() {
