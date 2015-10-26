@@ -1,11 +1,5 @@
 package solstice.exercise.solsticeexercise.model;
 
-import java.util.Date;
-
-/**
- * Created by romac-ubuntu on 25/10/15.
- */
-
 public class Contact {
     private String name;
     private String employeeId;
@@ -13,8 +7,6 @@ public class Contact {
     private String smallImageURL;
     private Long birthdate;
     private Phone phone;
-
-
     private String detailsURL;
 
     public String getName() {

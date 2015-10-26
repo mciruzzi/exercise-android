@@ -1,8 +1,8 @@
 package solstice.exercise.solsticeexercise.adapters;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +14,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-
 
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -36,6 +35,7 @@ import solstice.exercise.solsticeexercise.model.Contact;
 public class ContactsAdapter extends ArrayAdapter {
 
     private RequestQueue requestQueue;
+    private ImageLoader imageLoader;
     private static final String TAG = "ContactsAdapter";
 
     List<Contact> contacts = new ArrayList<Contact>();
@@ -73,6 +73,22 @@ public class ContactsAdapter extends ArrayAdapter {
 
         requestQueue.add(jsArrayRequest);
 
+        imageLoader = new ImageLoader(requestQueue,
+                new ImageLoader.ImageCache() {
+                    private final LruCache<String, Bitmap>
+                            cache = new LruCache<String, Bitmap>(20);
+
+                    @Override
+                    public Bitmap getBitmap(String url) {
+                        return cache.get(url);
+                    }
+
+                    @Override
+                    public void putBitmap(String url, Bitmap bitmap) {
+                        cache.put(url, bitmap);
+                    }
+                });
+
     }
 
     @Override
@@ -103,33 +119,18 @@ public class ContactsAdapter extends ArrayAdapter {
             row = convertView;
         }
 
-        Contact contact = (Contact) this.getItem(position);
+        final Contact contact = (Contact) this.getItem(position);
 
         final ImageView image = (ImageView) row.findViewById(R.id.contactImage);
         final TextView name = (TextView) row.findViewById(R.id.contactName);
         final TextView phone = (TextView) row.findViewById(R.id.contactPhone);
 
-        image.setImageResource(R.mipmap.default_profile);
         name.setText(contact.getName());
         phone.setText(contact.getPhone().getHome());
 
-        ImageRequest request = new ImageRequest(
-                contact.getSmallImageURL(),
-                new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap bitmap) {
-                        image.setImageBitmap(bitmap);
-                    }
-                }, 0, 0, null,null,
-                new Response.ErrorListener() {
-                    public void onErrorResponse(VolleyError error) {
-                        image.setImageResource(R.mipmap.default_profile);
-                        Log.d(TAG, "Error en respuesta Bitmap: "+ error.getMessage());
-                    }
-                });
 
-        requestQueue.add(request);
-
+        imageLoader.get(contact.getSmallImageURL(), ImageLoader.getImageListener(image,
+                R.mipmap.default_profile, R.mipmap.default_profile));
         return row;
     }
 

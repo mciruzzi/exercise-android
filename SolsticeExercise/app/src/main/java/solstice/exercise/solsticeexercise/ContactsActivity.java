@@ -10,13 +10,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.apache.http.HttpException;
-
-import java.util.List;
-
-import solstice.exercise.solsticeexercise.background.GetContactsTask;
-import solstice.exercise.solsticeexercise.model.Contact;
-
 public class ContactsActivity extends ActionBarActivity implements ILoadable {
 
     private ProgressBar progressBar;
@@ -49,13 +42,6 @@ public class ContactsActivity extends ActionBarActivity implements ILoadable {
 
         return super.onOptionsItemSelected(item);
     }
-    /*
-    private void loadContacts() {
-        showProgress(true);
-        GetContactsTask backgroundTask = new GetContactsTask(this);
-        backgroundTask.execute();
-    }
-    */
 
     @Override
     public void showProgress(final boolean show) {
@@ -75,13 +61,4 @@ public class ContactsActivity extends ActionBarActivity implements ILoadable {
                 });
     }
 
-    /*
-    public void onError(Exception error) {
-
-    }
-
-    public void updateConctacts(List<Contact> contacts) {
-
-    }
-    */
 }
