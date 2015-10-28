@@ -26,10 +26,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 import solstice.exercise.solsticeexercise.model.Contact;
 import solstice.exercise.solsticeexercise.model.ContactDetails;
 import solstice.exercise.solsticeexercise.rest.client.utils.CachedImageLoader;
+import solstice.exercise.solsticeexercise.rest.client.utils.ContactsAPI;
+import solstice.exercise.solsticeexercise.rest.client.utils.Routes;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -38,7 +44,7 @@ public class ContactDetailsActivityFragment extends Fragment {
 
     private final String TAG = "ContactDetailsFragment";
     private Contact contact;
-    private RequestQueue requestQueue; // TODO Should make singleton pattern to have just 1 requestQueue
+    private RequestQueue requestQueue;
     private View contactDetailsView;
 
     public ContactDetailsActivityFragment() {
@@ -61,35 +67,22 @@ public class ContactDetailsActivityFragment extends Fragment {
     }
 
     private void queryContactDetails() {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(Routes.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        ContactsAPI contactsAPI = retrofit.create(ContactsAPI.class);
 
-        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+        contactsAPI.getContactInfo(contact.getEmployeeId()).enqueue(new Callback<ContactDetails>() {
             @Override
-            public void onResponse(JSONObject response) {
-                contact.setDetails(parseJson(response));
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        populateContactInfo(contactDetailsView);
-                    }
-                });
+            public void onResponse(retrofit.Response<ContactDetails> response, Retrofit retrofit) {
+                if (response.isSuccess())
+                    contact.setDetails( response.body());
+                    populateContactInfo( contactDetailsView);
             }
-        };
 
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error JSON response: " + error.getMessage());
+            public void onFailure(Throwable t) {
+                    Log.d(TAG, "Error Respuesta en JSON: " + t.getMessage());
             }
-        };
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                contact.getDetailsURL(),
-                null,
-                listener,
-                errorListener );
-
-        requestQueue.add(jsonObjectRequest);
+        });
     }
 
     @Override
@@ -137,20 +130,5 @@ public class ContactDetailsActivityFragment extends Fragment {
         cachedImageLoader.get(imageURL, ImageLoader.getImageListener(imageView,
                 R.mipmap.default_profile, R.mipmap.default_profile));
 
-    }
-
-    public ContactDetails parseJson(JSONObject jsonObject){
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            ContactDetails contactDetails = mapper.readValue( jsonObject.toString(), ContactDetails.class);
-            return contactDetails;
-
-        } catch (JsonMappingException e) {
-            Log.e(TAG, "Mapping Error in ContactDetails: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(TAG, "Mapping Error in ContactDetails: " + e.getMessage());
-        }
-
-        return null;
     }
 }
