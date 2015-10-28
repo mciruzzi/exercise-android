@@ -38,6 +38,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.1'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     testCompile 'junit:junit:4.12'

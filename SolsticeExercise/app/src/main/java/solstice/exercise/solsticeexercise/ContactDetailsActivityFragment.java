@@ -1,39 +1,25 @@
 package solstice.exercise.solsticeexercise;
 
-import android.graphics.Bitmap;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import solstice.exercise.solsticeexercise.model.Contact;
 import solstice.exercise.solsticeexercise.model.ContactDetails;
-import solstice.exercise.solsticeexercise.rest.client.utils.CachedImageLoader;
 import solstice.exercise.solsticeexercise.rest.client.utils.ContactsAPI;
 import solstice.exercise.solsticeexercise.rest.client.utils.Routes;
 
@@ -44,7 +30,6 @@ public class ContactDetailsActivityFragment extends Fragment {
 
     private final String TAG = "ContactDetailsFragment";
     private Contact contact;
-    private RequestQueue requestQueue;
     private View contactDetailsView;
 
     public ContactDetailsActivityFragment() {
@@ -55,7 +40,6 @@ public class ContactDetailsActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contact = (Contact) this.getActivity().getIntent().getSerializableExtra( ContactDetailsActivity.CONTACT_ID_KEY);
-        requestQueue = Volley.newRequestQueue(this.getActivity());
         queryContactDetails();
     }
 
@@ -93,6 +77,7 @@ public class ContactDetailsActivityFragment extends Fragment {
     }
 
     private void populateContactInfo(View view) {
+        // TODO Implement View Holder Pattern
         TextView name = (TextView) view.findViewById(R.id.contactName);
         TextView company = (TextView) view.findViewById(R.id.contactCompany);
         TextView phone = (TextView) view.findViewById(R.id.contactPhone);
@@ -107,7 +92,7 @@ public class ContactDetailsActivityFragment extends Fragment {
         phone.setText(contact.getPhone().toString());
 
         Date birthDate = new Date( contact.getBirthdate() );
-        birthday.setText(new SimpleDateFormat("yyyy-MM-dd").format(birthDate));
+        birthday.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(birthDate));
 
         String emailString = contact.getDetails() != null ? contact.getDetails().getEmail() : "";
         email.setText(emailString);
@@ -124,11 +109,11 @@ public class ContactDetailsActivityFragment extends Fragment {
     }
 
     private void loadImage(ImageView imageView) {
-        String imageURL = contact.getDetails() != null ? contact.getDetails().getLargeImageURL() : contact.getSmallImageURL();
-        CachedImageLoader cachedImageLoader = new CachedImageLoader(requestQueue);
-
-        cachedImageLoader.get(imageURL, ImageLoader.getImageListener(imageView,
-                R.mipmap.default_profile, R.mipmap.default_profile));
+        Picasso.with(this.getActivity()).load(contact.getSmallImageURL()).noFade().placeholder(R.mipmap.default_profile).into(imageView);
+        if ( contact.getDetails() != null && contact.getDetails().getLargeImageURL() !=null ) {
+            String largeImageURL = contact.getDetails().getLargeImageURL();
+            Picasso.with(this.getActivity()).load(largeImageURL).noFade().into(imageView);
+        }
 
     }
 }

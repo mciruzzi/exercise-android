@@ -8,9 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +20,11 @@ import solstice.exercise.solsticeexercise.ContactsActivity;
 import solstice.exercise.solsticeexercise.ILoadable;
 import solstice.exercise.solsticeexercise.R;
 import solstice.exercise.solsticeexercise.model.Contact;
-import solstice.exercise.solsticeexercise.rest.client.utils.CachedImageLoader;
 import solstice.exercise.solsticeexercise.rest.client.utils.ContactsAPI;
 import solstice.exercise.solsticeexercise.rest.client.utils.Routes;
 
 public class ContactsAdapter extends ArrayAdapter {
 
-    private RequestQueue requestQueue;
-    private ImageLoader imageLoader;
     private static final String TAG = "ContactsAdapter";
 
     private List<Contact> contacts = new ArrayList<Contact>();
@@ -38,12 +33,9 @@ public class ContactsAdapter extends ArrayAdapter {
     public ContactsAdapter(ContactsActivity activity) {
         super(activity, 0);
         showProgress = activity;
-        requestQueue = Volley.newRequestQueue(this.getContext());
-        imageLoader = new CachedImageLoader( requestQueue);
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Routes.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         ContactsAPI contactsAPI = retrofit.create(ContactsAPI.class);
-
 
         contactsAPI.getContacts().enqueue(new Callback<List<Contact>>() {
             @Override
@@ -84,16 +76,16 @@ public class ContactsAdapter extends ArrayAdapter {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        // TODO Not using ViewHolder Pattern since there's bug setting images view to previous requested image download
-        View row = null;
-        //if (convertView == null) {
+        View row;
+        if (convertView == null) {
             row = layoutInflater.inflate(R.layout.contact_in_list, parent, false);
-        //} else {
-        //    row = convertView;
-        //}
+        } else {
+            row = convertView;
+        }
 
         final Contact contact = (Contact) this.getItem(position);
 
+        // TODO Implement View Holder Pattern
         final ImageView image = (ImageView) row.findViewById(R.id.contactImage);
         final TextView name = (TextView) row.findViewById(R.id.contactName);
         final TextView phone = (TextView) row.findViewById(R.id.contactPhone);
@@ -103,8 +95,8 @@ public class ContactsAdapter extends ArrayAdapter {
         phone.setText(contact.getPhone().getHome());
         image.setImageResource(R.mipmap.default_profile);
 
-        imageLoader.get(contact.getSmallImageURL(), ImageLoader.getImageListener(image,
-                R.mipmap.default_profile, R.mipmap.default_profile));
+        Picasso.with(this.getContext()).load(contact.getSmallImageURL()).placeholder(R.mipmap.default_profile).into(image);
+
         return row;
     }
 
